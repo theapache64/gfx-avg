@@ -29,6 +29,7 @@ private val gfxInfoRegEx = """
 )
 
 fun main(args: Array<String>) {
+    println("➡️ Initializing...")
     val userDir = File(System.getProperty("user.dir"))
     val gfxInfoList = mutableListOf<GfxInfo>()
     userDir.walk()
