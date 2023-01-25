@@ -18,7 +18,7 @@ sudo npm install -g gfx-avg
 
 ### ✨ Demo
 
-```shell
+```console
 ❯ ls
 after_1.txt after_2.txt
 ❯ gfx-avg
