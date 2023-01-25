@@ -10,81 +10,8 @@
 
 > A CLI tool to find average from multiple gfxinfo files
 
-### 💻 Install
-
-```shell
-sudo npm install -g gfx-avg
-```
-
 ### ✨ Demo
 
-```shell
-❯ ls
-after_1.txt after_2.txt
-❯ gfx-avg
---------------------
-👓Parsing /Users/theapache64/Desktop/gfxinfo/lottie/after/after_2.txt
---------------------
-totalFrames : 75
-jankyFrames : 15
-jankyFramesPerc : 20.0%
-p50 : 6ms
-p90 : 53ms
-p95 : 200ms
-p99 : 950ms
-missedVsyncs : 4
-highInputLatency : 42
-slowUiThreads : 7
-slowBitmapUploads : 0
-slowDrawCommands : 0
-frameDeadlineMissed : 8
-p50Cpu : 9ms
-p90Cpu : 12ms
-p95Cpu : 13ms
-p99Cpu : 16ms
---------------------
-👓Parsing /Users/theapache64/Desktop/gfxinfo/lottie/after/after_1.txt
---------------------
-totalFrames : 157
-jankyFrames : 126
-jankyFramesPerc : 80.25%
-p50 : 19ms
-p90 : 30ms
-p95 : 77ms
-p99 : 450ms
-missedVsyncs : 8
-highInputLatency : 130
-slowUiThreads : 9
-slowBitmapUploads : 0
-slowDrawCommands : 5
-frameDeadlineMissed : 12
-p50Cpu : 11ms
-p90Cpu : 14ms
-p95Cpu : 14ms
-p99Cpu : 19ms
------------
-➗ Average
------------
-totalFrames : 116
-jankyFrames : 70
-jankyFramesPerc : 50.125%
-p50 : 12ms
-p90 : 41ms
-p95 : 138ms
-p99 : 700ms
-missedVsyncs : 6
-highInputLatency : 86
-slowUiThreads : 8
-slowBitmapUploads : 0
-slowDrawCommands : 2
-frameDeadlineMissed : 10
-p50Cpu : 10ms
-p90Cpu : 13ms
-p95Cpu : 13ms
-p99Cpu : 17ms
-
-~/Desktop/gfxinfo/lottie/after master*
-```
 
 ## ✍️ Author
 
