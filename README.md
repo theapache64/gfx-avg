@@ -1,6 +1,6 @@
 ![](cover.jpeg)
 
-# gfx-avg
+# 📈 gfx-avg
 
 ![buildStatus](https://img.shields.io/github/workflow/status/theapache64/gfx-avg/Java%20CI%20with%20Gradle?style=plastic)
 ![latestVersion](https://img.shields.io/github/v/release/theapache64/gfx-avg)
@@ -8,7 +8,7 @@
 <img alt="Twitter: theapache64" src="https://img.shields.io/twitter/follow/theapache64.svg?style=social" />
 </a>
 
-> A CLI tool to find average from muliple gfxinfo files
+> A CLI tool to find average from multiple gfxinfo files
 
 ### ✨ Demo
 

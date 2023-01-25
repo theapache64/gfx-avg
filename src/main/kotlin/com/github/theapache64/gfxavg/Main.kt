@@ -22,17 +22,14 @@ private val gfxInfoRegEx = """
     90th gpu percentile: (?<p90Cpu>\d+)ms
     95th gpu percentile: (?<p95Cpu>\d+)ms
     99th gpu percentile: (?<p99Cpu>\d+)ms
-""".trimIndent().also {
-    // println(it)
-}.toRegex(
+""".trimIndent().toRegex(
     setOf(
         RegexOption.MULTILINE
     )
 )
 
-
-fun main() {
-    val userDir = File("/Users/theapache64/Desktop/gfxinfo/lottie/before") // File(System.getProperty("user.dir"))
+fun main(args: Array<String>) {
+    val userDir = File(System.getProperty("user.dir"))
     val gfxInfoList = mutableListOf<GfxInfo>()
     userDir.walk()
         .forEach { file ->
@@ -52,7 +49,7 @@ fun main() {
             }
         }
 
-    if(gfxInfoList.isEmpty()){
+    if (gfxInfoList.isEmpty()) {
         println("❌ Couldn't find any gfxinfo file in ${userDir.absolutePath}")
         return
     }
