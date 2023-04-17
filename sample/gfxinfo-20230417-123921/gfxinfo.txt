@@ -1,0 +1,59 @@
+Applications Graphics Acceleration Info:
+Uptime: 272967383 Realtime: 1026154247
+
+** Graphics info for pid 13639 [com.myapp] **
+
+Stats since: 272907904621418ns
+Total frames rendered: 1013
+Janky frames: 522 (51.53%)
+50th percentile: 17ms
+90th percentile: 57ms
+95th percentile: 125ms
+99th percentile: 350ms
+Number Missed Vsync: 82
+Number High input latency: 881
+Number Slow UI thread: 128
+Number Slow bitmap uploads: 1
+Number Slow issue draw commands: 25
+Number Frame deadline missed: 129
+HISTOGRAM: 5ms=27 6ms=8 7ms=8 8ms=7 9ms=12 10ms=16 11ms=59 12ms=91 13ms=52 14ms=70 15ms=116 16ms=39 17ms=82 18ms=41 19ms=40 20ms=26 21ms=25 22ms=17 23ms=9 24ms=11 25ms=14 26ms=13 27ms=8 28ms=16 29ms=8 30ms=9 31ms=3 32ms=14 34ms=19 36ms=14 38ms=6 40ms=5 42ms=2 44ms=5 46ms=7 48ms=8 53ms=1 57ms=10 61ms=6 65ms=6 69ms=4 73ms=2 77ms=2 81ms=3 85ms=0 89ms=8 93ms=4 97ms=2 101ms=2 105ms=0 109ms=2 113ms=0 117ms=0 121ms=3 125ms=4 129ms=2 133ms=1 150ms=14 200ms=7 250ms=6 300ms=5 350ms=3 400ms=0 450ms=2 500ms=1 550ms=2 600ms=0 650ms=0 700ms=0 750ms=2 800ms=1 850ms=0 900ms=0 950ms=0 1000ms=0 1050ms=0 1100ms=1 1150ms=0 1200ms=0 1250ms=0 1300ms=0 1350ms=0 1400ms=0 1450ms=0 1500ms=0 1550ms=0 1600ms=0 1650ms=0 1700ms=0 1750ms=0 1800ms=0 1850ms=0 1900ms=0 1950ms=0 2000ms=0 2050ms=0 2100ms=0 2150ms=0 2200ms=0 2250ms=0 2300ms=0 2350ms=0 2400ms=0 2450ms=0 2500ms=0 2550ms=0 2600ms=0 2650ms=0 2700ms=0 2750ms=0 2800ms=0 2850ms=0 2900ms=0 2950ms=0 3000ms=0 3050ms=0 3100ms=0 3150ms=0 3200ms=0 3250ms=0 3300ms=0 3350ms=0 3400ms=0 3450ms=0 3500ms=0 3550ms=0 3600ms=0 3650ms=0 3700ms=0 3750ms=0 3800ms=0 3850ms=0 3900ms=0 3950ms=0 4000ms=0 4050ms=0 4100ms=0 4150ms=0 4200ms=0 4250ms=0 4300ms=0 4350ms=0 4400ms=0 4450ms=0 4500ms=0 4550ms=0 4600ms=0 4650ms=0 4700ms=0 4750ms=0 4800ms=0 4850ms=0 4900ms=0 4950ms=0
+Font Cache (CPU):
+  Size: 188.91 kB 
+  Glyph Count: 76 
+CPU Caches:
+GPU Caches:
+  Other:
+    Other: 32.88 KB (1 entry)
+    Buffer Object: 32.05 KB (3 entries)
+  Image:
+    Texture: 15.33 MB (60 entries)
+  Scratch:
+    RenderTarget: 36.70 MB (25 entries)
+    Texture: 2.98 MB (168 entries)
+    Buffer Object: 48.00 KB (1 entry)
+Other Caches:
+                         Current / Maximum
+  VectorDrawableAtlas    0.00 kB /   0.00 KB (entries = 0)
+  Layers Total           0.00 KB (numLayers = 0)
+Total GPU memory usage:
+  57797172 bytes, 55.12 MB (38.53 MB is purgeable)
+
+
+Pipeline=Skia (OpenGL)
+
+Layout Cache Info:
+  Usage: 417/5000 entries
+  Hit ratio: 12486/12903 (0.967682)
+Profile data in ms:
+
+	com.myapp/com.hotstar.MainActivity/android.view.ViewRootImpl@d518fcd (visibility=0)
+View hierarchy:
+
+  com.myapp/com.hotstar.MainActivity/android.view.ViewRootImpl@d518fcd
+  13 views, 13.20 kB of display lists
+
+
+Total ViewRootImpl: 1
+Total Views:        13
+Total DisplayList:  13.20 kB
+

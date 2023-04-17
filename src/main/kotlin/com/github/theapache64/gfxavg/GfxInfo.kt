@@ -19,7 +19,11 @@ data class GfxInfo(
     val p95Cpu: Int,// 95th gpu percentile: 14ms
     val p99Cpu: Int, // 99th gpu percentile: 19ms
 ) {
+
+    var histogram : Map<Int, Int> = emptyMap()
+
     fun toReport(): String {
+
         return this.toString()
             .replace("(GfxInfo|\\(|\\)|\\s)".toRegex(), "")
             .replace("=", " : ")

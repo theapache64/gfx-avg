@@ -1,6 +1,7 @@
 package com.github.theapache64.gfxavg
 
 import java.io.File
+import kotlin.math.roundToInt
 
 private val gfxInfoRegEx = """
     Total frames rendered: (?<totalFrames>\d+)
@@ -16,6 +17,7 @@ private val gfxInfoRegEx = """
     Number Slow bitmap uploads: (?<slowBitmapUploads>\d+)
     Number Slow issue draw commands: (?<slowDrawCommands>\d+)
     Number Frame deadline missed: (?<frameDeadlineMissed>\d+)
+    HISTOGRAM: (?<histogram>.+)
     ?.*
     ?.*
     50th gpu percentile: (?<p50Cpu>\d+)ms
@@ -42,17 +44,22 @@ private val gfxInfoRegExSimple = """
     Number Slow bitmap uploads: (?<slowBitmapUploads>\d+)
     Number Slow issue draw commands: (?<slowDrawCommands>\d+)
     Number Frame deadline missed: (?<frameDeadlineMissed>\d+)
+    HISTOGRAM: (?<histogram>.+)
 """.trimIndent().toRegex(
     setOf(
         RegexOption.MULTILINE
     )
 )
 
+private val histogramBoundary = 700 // ms
+private val isDebug = true
+private val debugDir = File("sample")
 fun main(args: Array<String>) {
     println("➡️ Initializing gfx-avg...")
-    val isSimpleInput = args.contains("-s")
+    val isSimpleInput = if(isDebug) true else args.contains("-s")
+
     val regEx = if (isSimpleInput) gfxInfoRegExSimple else gfxInfoRegEx
-    val userDir = File(System.getProperty("user.dir"))
+    val userDir = if(isDebug) debugDir else File(System.getProperty("user.dir"))
     val gfxInfoList = mutableListOf<GfxInfo>()
     userDir.walk()
         .forEach { file ->
@@ -63,7 +70,7 @@ fun main(args: Array<String>) {
                 println("--------------------")
                 println("👓Parsing ${file.absolutePath}")
                 println("--------------------")
-                (if (isSimpleInput) parseGfxInfoSimple(matchResult) else parseGfxInfo(matchResult)).also {
+                parseGfxInfo(matchResult).also {
                     gfxInfoList.add(it)
                     println(it.toReport())
                 }
@@ -104,6 +111,23 @@ fun main(args: Array<String>) {
     println(
         averageGfxInfo.toReport()
     )
+
+    println("------------")
+    println("📈 Histogram")
+    println("------------")
+
+    // frames more than given ms
+    arrayOf(100, 500, 700, 1000).forEach { duration ->
+        println("Frames more than $duration ms = ${getAverageFrameCount(duration, gfxInfoList)}")
+    }
+}
+
+fun getAverageFrameCount(duration: Int, gfxInfoList: MutableList<GfxInfo>): Int {
+    var sumOfFrames = 0f
+    for (gfxinfo in gfxInfoList) {
+        sumOfFrames += gfxinfo.histogram.filter { entry -> entry.key >= duration }.values.sum()
+    }
+    return (sumOfFrames / gfxInfoList.size).roundToInt()
 }
 
 fun getSuffix(key: String): String {
@@ -130,32 +154,30 @@ fun parseGfxInfo(matchResult: MatchResult): GfxInfo {
         slowBitmapUploads = groups["slowBitmapUploads"]!!.value.toInt(),
         slowDrawCommands = groups["slowDrawCommands"]!!.value.toInt(),
         frameDeadlineMissed = groups["frameDeadlineMissed"]!!.value.toInt(),
-        p50Cpu = groups["p50Cpu"]!!.value.toInt(),
-        p90Cpu = groups["p90Cpu"]!!.value.toInt(),
-        p95Cpu = groups["p95Cpu"]!!.value.toInt(),
-        p99Cpu = groups["p99Cpu"]!!.value.toInt(),
-    )
+        p50Cpu = groups.getOrNull("p50Cpu")?.value?.toInt() ?: 0,
+        p90Cpu = groups.getOrNull("p90Cpu")?.value?.toInt() ?: 0,
+        p95Cpu = groups.getOrNull("p95Cpu")?.value?.toInt() ?: 0,
+        p99Cpu = groups.getOrNull("p99Cpu")?.value?.toInt() ?: 0
+    ).apply {
+        histogram = parseHistogram(groups["histogram"]!!.value)
+    }
 }
 
-fun parseGfxInfoSimple(matchResult: MatchResult): GfxInfo {
-    val groups = matchResult.groups
-    return GfxInfo(
-        totalFrames = groups["totalFrames"]!!.value.toInt(),
-        jankyFrames = groups["jankyFrames"]!!.value.toInt(),
-        jankyFramesPerc = groups["jankyFramesPerc"]!!.value.toDouble(),
-        p50 = groups["p50"]!!.value.toInt(),
-        p90 = groups["p90"]!!.value.toInt(),
-        p95 = groups["p95"]!!.value.toInt(),
-        p99 = groups["p99"]!!.value.toInt(),
-        missedVsyncs = groups["missedVsyncs"]!!.value.toInt(),
-        highInputLatency = groups["highInputLatency"]!!.value.toInt(),
-        slowUiThreads = groups["slowUiThreads"]!!.value.toInt(),
-        slowBitmapUploads = groups["slowBitmapUploads"]!!.value.toInt(),
-        slowDrawCommands = groups["slowDrawCommands"]!!.value.toInt(),
-        frameDeadlineMissed = groups["frameDeadlineMissed"]!!.value.toInt(),
-        p50Cpu = 0,
-        p90Cpu = 0,
-        p95Cpu = 0,
-        p99Cpu = 0,
-    )
+private fun MatchGroupCollection.getOrNull(key: String): MatchGroup? {
+    return try {
+        get(key)
+    }catch (e: IllegalArgumentException){
+        null
+    }
 }
+
+// value : 5ms=0 6ms=9 7ms=5 8ms=7 9ms=25 10ms=27 11ms=62 12ms=78 13ms=79 14ms=82 15ms=108 16ms=62 17ms=43
+fun parseHistogram(value: String): Map<Int, Int> {
+    return mutableMapOf<Int, Int>().apply {
+        value.split(" ").forEach {
+            val (time, count) = it.split("ms=")
+            put(time.trim().toInt(), count.trim().toInt())
+        }
+    }
+}
+
