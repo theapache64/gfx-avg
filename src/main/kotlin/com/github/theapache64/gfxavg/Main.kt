@@ -51,12 +51,12 @@ private val gfxInfoRegExSimple = """
     )
 )
 
-private val histogramBoundary = 700 // ms
-private val isDebug = true
+private val isDebug = false
 private val debugDir = File("sample")
 fun main(args: Array<String>) {
     println("➡️ Initializing gfx-avg...")
     val isSimpleInput = if(isDebug) true else args.contains("-s")
+    val isVerbose = args.contains("-v")
 
     val regEx = if (isSimpleInput) gfxInfoRegExSimple else gfxInfoRegEx
     val userDir = if(isDebug) debugDir else File(System.getProperty("user.dir"))
@@ -72,7 +72,9 @@ fun main(args: Array<String>) {
                 println("--------------------")
                 parseGfxInfo(matchResult).also {
                     gfxInfoList.add(it)
-                    println(it.toReport())
+                    if(isVerbose){
+                        println(it.toReport())
+                    }
                 }
             } else {
                 println("⚠️ Not gfxinfo file. Skipping ${file.absolutePath}")
