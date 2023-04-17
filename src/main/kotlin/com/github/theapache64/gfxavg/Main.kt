@@ -125,11 +125,8 @@ fun main(args: Array<String>) {
 }
 
 fun getAverageFrameCount(duration: Int, gfxInfoList: MutableList<GfxInfo>): Int {
-    var sumOfFrames = 0f
-    for (gfxinfo in gfxInfoList) {
-        sumOfFrames += gfxinfo.histogram.filter { entry -> entry.key >= duration }.values.sum()
-    }
-    return (sumOfFrames / gfxInfoList.size).roundToInt()
+    val sum =  gfxInfoList.sumOf { it.histogram.filter { entry -> entry.key >= duration }.values.sum() } / gfxInfoList.size.toFloat()
+    return sum.roundToInt()
 }
 
 fun getSuffix(key: String): String {
