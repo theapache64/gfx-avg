@@ -28,20 +28,42 @@ private val gfxInfoRegEx = """
     )
 )
 
+private val gfxInfoRegExSimple = """
+    Total frames rendered: (?<totalFrames>\d+)
+    Janky frames: (?<jankyFrames>\d+) \((?<jankyFramesPerc>\d+.\d+)%\)
+    ?.*
+    50th percentile: (?<p50>\d+)ms
+    90th percentile: (?<p90>\d+)ms
+    95th percentile: (?<p95>\d+)ms
+    99th percentile: (?<p99>\d+)ms
+    Number Missed Vsync: (?<missedVsyncs>\d+)
+    Number High input latency: (?<highInputLatency>\d+)
+    Number Slow UI thread: (?<slowUiThreads>\d+)
+    Number Slow bitmap uploads: (?<slowBitmapUploads>\d+)
+    Number Slow issue draw commands: (?<slowDrawCommands>\d+)
+    Number Frame deadline missed: (?<frameDeadlineMissed>\d+)
+""".trimIndent().toRegex(
+    setOf(
+        RegexOption.MULTILINE
+    )
+)
+
 fun main(args: Array<String>) {
-    println("➡️ Initializing...")
+    println("➡️ Initializing gfx-avg...")
+    val isSimpleInput = args.contains("-s")
+    val regEx = if (isSimpleInput) gfxInfoRegExSimple else gfxInfoRegEx
     val userDir = File(System.getProperty("user.dir"))
     val gfxInfoList = mutableListOf<GfxInfo>()
     userDir.walk()
         .forEach { file ->
             if (file.isDirectory) return@forEach
             val fileContents = file.readText()
-            val matchResult = gfxInfoRegEx.find(fileContents)
+            val matchResult = regEx.find(fileContents)
             if (matchResult != null) {
                 println("--------------------")
                 println("👓Parsing ${file.absolutePath}")
                 println("--------------------")
-                parseGfxInfo(matchResult).also {
+                (if (isSimpleInput) parseGfxInfoSimple(matchResult) else parseGfxInfo(matchResult)).also {
                     gfxInfoList.add(it)
                     println(it.toReport())
                 }
@@ -112,5 +134,28 @@ fun parseGfxInfo(matchResult: MatchResult): GfxInfo {
         p90Cpu = groups["p90Cpu"]!!.value.toInt(),
         p95Cpu = groups["p95Cpu"]!!.value.toInt(),
         p99Cpu = groups["p99Cpu"]!!.value.toInt(),
+    )
+}
+
+fun parseGfxInfoSimple(matchResult: MatchResult): GfxInfo {
+    val groups = matchResult.groups
+    return GfxInfo(
+        totalFrames = groups["totalFrames"]!!.value.toInt(),
+        jankyFrames = groups["jankyFrames"]!!.value.toInt(),
+        jankyFramesPerc = groups["jankyFramesPerc"]!!.value.toDouble(),
+        p50 = groups["p50"]!!.value.toInt(),
+        p90 = groups["p90"]!!.value.toInt(),
+        p95 = groups["p95"]!!.value.toInt(),
+        p99 = groups["p99"]!!.value.toInt(),
+        missedVsyncs = groups["missedVsyncs"]!!.value.toInt(),
+        highInputLatency = groups["highInputLatency"]!!.value.toInt(),
+        slowUiThreads = groups["slowUiThreads"]!!.value.toInt(),
+        slowBitmapUploads = groups["slowBitmapUploads"]!!.value.toInt(),
+        slowDrawCommands = groups["slowDrawCommands"]!!.value.toInt(),
+        frameDeadlineMissed = groups["frameDeadlineMissed"]!!.value.toInt(),
+        p50Cpu = 0,
+        p90Cpu = 0,
+        p95Cpu = 0,
+        p99Cpu = 0,
     )
 }
