@@ -11,7 +11,7 @@
 
 ### 💻 Install
 
-[![npm version](https://badge.fury.io/js/gfx-avg.svg)](https://badge.fury.io/js/gfx-avg)
+![npm](https://img.shields.io/npm/v/gfx-avg)
 
 ```shell
 sudo npm install -g gfx-avg
