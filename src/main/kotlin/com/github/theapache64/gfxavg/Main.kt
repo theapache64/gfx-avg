@@ -1,7 +1,6 @@
 package com.github.theapache64.gfxavg
 
 import java.io.File
-import kotlin.math.roundToInt
 
 private val gfxInfoRegEx = """
     Total frames rendered: (?<totalFrames>\d+)
@@ -124,9 +123,8 @@ fun main(args: Array<String>) {
     }
 }
 
-fun getAverageFrameCount(duration: Int, gfxInfoList: MutableList<GfxInfo>): Int {
-    val sum =  gfxInfoList.sumOf { it.histogram.filter { entry -> entry.key >= duration }.values.sum() } / gfxInfoList.size.toFloat()
-    return sum.roundToInt()
+fun getAverageFrameCount(duration: Int, gfxInfoList: MutableList<GfxInfo>): Float {
+    return gfxInfoList.sumOf { it.histogram.filter { entry -> entry.key >= duration }.values.sum() } / gfxInfoList.size.toFloat()
 }
 
 fun getSuffix(key: String): String {
