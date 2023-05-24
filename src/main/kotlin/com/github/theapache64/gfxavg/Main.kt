@@ -56,16 +56,19 @@ private val regExes = listOf(
     gfxInfoRegExSimple
 )
 
-private val isDebug = true
+private val isDebug = false
 private val debugDir = File("/Users/theapache64/Downloads/gfx-info")
 fun main(args: Array<String>) {
-    println("➡️ Initializing gfx-avg...")
+    println("🚀 Initializing gfx-avg...")
+    if(isDebug){
+        println("⚠️ DEBUG MODE IS ON ⚠️")
+    }
     val isVerbose = args.contains("-v")
 
     val userDir = if (isDebug) debugDir else File(System.getProperty("user.dir"))
     val regEx = getMatchingRegex(userDir)
     if (regEx == null) {
-        println("❌ Couldn't find matching regEx")
+        println("❌ Couldn't find matching regEx!")
         return
     }
 
