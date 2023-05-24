@@ -83,7 +83,13 @@ p50Cpu : 10ms
 p90Cpu : 13ms
 p95Cpu : 13ms
 p99Cpu : 17ms
-
+------------
+📈 Histogram
+------------
+Frames more than 100 ms = 53.333332
+Frames more than 500 ms = 6.0
+Frames more than 700 ms = 3.0
+Frames more than 1000 ms = 0.6666667
 ~/Desktop/gfxinfo/lottie/after master*
 ```
 
