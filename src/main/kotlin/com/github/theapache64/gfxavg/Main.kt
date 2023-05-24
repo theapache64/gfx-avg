@@ -43,6 +43,7 @@ private val gfxInfoRegExSimple = """
     Number Slow bitmap uploads: (?<slowBitmapUploads>\d+)
     Number Slow issue draw commands: (?<slowDrawCommands>\d+)
     Number Frame deadline missed: (?<frameDeadlineMissed>\d+)
+    ?.*
     HISTOGRAM: (?<histogram>.+)
 """.trimIndent().toRegex(
     setOf(
@@ -50,15 +51,24 @@ private val gfxInfoRegExSimple = """
     )
 )
 
-private val isDebug = false
-private val debugDir = File("sample")
+private val regExes = listOf(
+    gfxInfoRegEx,
+    gfxInfoRegExSimple
+)
+
+private val isDebug = true
+private val debugDir = File("/Users/theapache64/Downloads/gfx-info")
 fun main(args: Array<String>) {
     println("➡️ Initializing gfx-avg...")
-    val isSimpleInput = if(isDebug) true else args.contains("-s")
     val isVerbose = args.contains("-v")
 
-    val regEx = if (isSimpleInput) gfxInfoRegExSimple else gfxInfoRegEx
-    val userDir = if(isDebug) debugDir else File(System.getProperty("user.dir"))
+    val userDir = if (isDebug) debugDir else File(System.getProperty("user.dir"))
+    val regEx = getMatchingRegex(userDir)
+    if (regEx == null) {
+        println("❌ Couldn't find matching regEx")
+        return
+    }
+
     val gfxInfoList = mutableListOf<GfxInfo>()
     userDir.walk()
         .forEach { file ->
@@ -71,7 +81,7 @@ fun main(args: Array<String>) {
                 println("--------------------")
                 parseGfxInfo(matchResult).also {
                     gfxInfoList.add(it)
-                    if(isVerbose){
+                    if (isVerbose) {
                         println(it.toReport())
                     }
                 }
@@ -79,11 +89,6 @@ fun main(args: Array<String>) {
                 println("⚠️ Not gfxinfo file. Skipping ${file.absolutePath}")
             }
         }
-
-    if (gfxInfoList.isEmpty()) {
-        println("❌ Couldn't find any gfxinfo file in ${userDir.absolutePath}")
-        return
-    }
 
     println("-----------")
     println("➗ Average")
@@ -121,6 +126,26 @@ fun main(args: Array<String>) {
     arrayOf(100, 500, 700, 1000).forEach { duration ->
         println("Frames more than $duration ms = ${getAverageFrameCount(duration, gfxInfoList)}")
     }
+}
+
+fun getMatchingRegex(userDir: File): Regex? {
+    // get a gfx avg info file
+    val gfxAvgFile = userDir.walk()
+        .find { file ->
+            file.isFile && file.readLines().firstOrNull()?.startsWith("Applications Graphics Acceleration Info") == true
+        } ?: return null
+
+    println("☑️ Found sample gfxAvg file -> '${gfxAvgFile.absolutePath}'")
+    var matchedRegex: Regex? = null
+    val fileContent = gfxAvgFile.readText()
+    for (regEx in regExes) {
+        val matchResult = regEx.find(fileContent)
+        if (matchResult != null) {
+            matchedRegex = regEx
+            break
+        }
+    }
+    return matchedRegex
 }
 
 fun getAverageFrameCount(duration: Int, gfxInfoList: MutableList<GfxInfo>): Float {
@@ -163,7 +188,7 @@ fun parseGfxInfo(matchResult: MatchResult): GfxInfo {
 private fun MatchGroupCollection.getOrNull(key: String): MatchGroup? {
     return try {
         get(key)
-    }catch (e: IllegalArgumentException){
+    } catch (e: IllegalArgumentException) {
         null
     }
 }
