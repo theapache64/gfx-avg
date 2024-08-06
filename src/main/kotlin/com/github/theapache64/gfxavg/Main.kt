@@ -57,7 +57,7 @@ private val regExes = listOf(
 )
 
 private val isDebug = false
-private val debugDir = File("/Users/theapache64/Downloads/gfx-info")
+private val debugDir = File("/Users/theapache64/Desktop/indep/after")
 fun main(args: Array<String>) {
     println("🚀 Initializing gfx-avg...")
     if(isDebug){
@@ -135,7 +135,8 @@ fun getMatchingRegex(userDir: File): Regex? {
     // get a gfx avg info file
     val gfxAvgFile = userDir.walk()
         .find { file ->
-            file.isFile && file.readLines().firstOrNull()?.startsWith("Applications Graphics Acceleration Info") == true
+            file.isFile && file.readLines().firstOrNull()?.startsWith("Applications Graphics Acceleration Info") == true ||
+            file.isFile && file.readLines().firstOrNull()?.startsWith("** Graphics info for") == true
         } ?: return null
 
     println("☑️ Found sample gfxAvg file -> '${gfxAvgFile.absolutePath}'")
