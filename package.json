@@ -3,19 +3,23 @@
   "author": "theapache64",
   "description": "A CLI tool to find average from multiple gfxinfo files",
   "main": "index.js",
-  "preferGlobal": true,
+  "preferGlobal": "true",
   "repository": "https://github.com/theapache64/gfx-avg",
   "version": "1.0.7",
   "jdeploy": {
-    "jdk": false,
+    "jdk": "false",
     "javaVersion": "11",
     "jar": "out/artifacts/gfx_avg_jar/gfx-avg.jar",
-    "javafx": false,
+    "javafx": "false",
     "title": "gfx-avg"
   },
   "dependencies": {
     "njre": "^0.2.0",
-    "shelljs": "^0.8.4"
+    "shelljs": "^0.8.4",
+    "command-exists-promise": "^2.0.2",
+    "node-fetch": "2.6.7",
+    "tar": "^4.4.8",
+    "yauzl": "^2.10.0"
   },
   "license": "ISC",
   "name": "gfx-avg",
